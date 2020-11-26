@@ -13,7 +13,7 @@ jobs:
     name: Create Release
     steps:
       - name: Checkout code
-        uses: ../actions/action.yml
+        uses: actions/checkout@v2
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -26,7 +26,6 @@ jobs:
             pooop
           draft: false
           prerelease: false
-      - uses: actions/checkout@v2
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
