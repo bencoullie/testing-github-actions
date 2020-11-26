@@ -1,11 +1,9 @@
-on: [push]
-
 # Run this workflow every time a new commit pushed to your repository
-# on:
-#   push:
-#     # Sequence of patterns matched against refs/tags
-#     tags:
-#       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10x
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10x
 
 jobs:
   build:
