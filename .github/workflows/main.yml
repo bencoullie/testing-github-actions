@@ -1,33 +1,62 @@
 on: [push]
 
+# Run this workflow every time a new commit pushed to your repository
+# on:
+#   push:
+#     # Sequence of patterns matched against refs/tags
+#     tags:
+#       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10x
+
 jobs:
-  hello_world_job:
+  build:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: Create Release
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Hello world action step
-        uses: ./ # Uses an action in the root directory
-        id: hello
+      - name: Checkout code
+        uses: ../actions/action.yml
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          who-to-greet: 'Mona the Octocat'
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
-  slackNotification:
-      name: Slack Notification
-      runs-on: ubuntu-latest
-      steps:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            pooop
+          draft: false
+          prerelease: false
       - uses: actions/checkout@v2
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: '#FCC9B9'
+          MSG_MINIMAL: true
+          SLACK_MESSAGE: ${{ steps.create_release.outputs.html_url }}
+
+  # slackNotification:
+  #     name: Slack Notification
+  #     runs-on: ubuntu-latest
+  #     steps:
 
 
+  # hello_world_job:
+  #   runs-on: ubuntu-latest
+  #   name: A job to say hello
+  #   steps:
+  #     # To use this repository's private action,
+  #     # you must check out the repository
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Hello world action step
+  #       uses: ./ # Uses an action in the root directory
+  #       id: hello
+  #       with:
+  #         who-to-greet: 'Mona the Octocat'
+  #     # Use the output from the `hello` step
+  #     - name: Get the output time
+  #       run: echo "The time was ${{ steps.hello.outputs.time }}"
 
 # Run this workflow every time a new commit pushed to your repository
 # on:
@@ -53,23 +82,3 @@ jobs:
 #     # Use the output from the `hello` step
 #     - name: Get the output time
 #       run: echo "The time was ${{ steps.hello.outputs.time }}"
-
-# jobs:
-#   build:
-#     name: Create Release
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: ../actions/action.yml
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     body: |
-      #       pooop
-      #     draft: false
-      #     prerelease: false
